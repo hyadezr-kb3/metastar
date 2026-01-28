@@ -1,0 +1,61 @@
+@import "tailwindcss";
+@import "@fontsource/noto-serif-tc";
+
+
+
+@layer utilities {
+
+  html,
+  body,
+  #root {
+    @apply bg-paper;
+    min-height: 100vh;
+  }
+
+  .animation-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  .animation-slide-down {
+    animation: slideDown 0.3s ease-out;
+  }
+}
+
+@theme {
+  --color-paper: #0f172a;
+  --color-ink: #f1f5f9;
+  --color-clay: #15803d;
+  --color-sage: #A8B799;
+  --color-sand: #334155;
+  --color-indigo-muted: #94a3b8;
+  --color-red-muted: #f87171;
+
+  --font-serif: "Noto Serif TC", serif;
+  --font-sans: "Inter", sans-serif;
+
+  --shadow-paper: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
