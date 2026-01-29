@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import Header from './components/Header';
 import BottomNav from './components/BottomNav';
-import FlyingStarGrid from './components/FlyingStarGrid';
-import ZodiacList from './components/ZodiacList';
-import CalendarDetailView from './components/CalendarDetailView'; // NEW
 import { getCenterStar, calculateGrid, getAfflictions } from './utils/calendar';
 import { STARS_INFO, PALACES } from './data/stars';
+
+// Lazy Load Main Components
+const FlyingStarGrid = lazy(() => import('./components/FlyingStarGrid'));
+const ZodiacList = lazy(() => import('./components/ZodiacList'));
+const CalendarDetailView = lazy(() => import('./components/CalendarDetailView'));
 
 export default function FengShuiAppPro() {
   // State management
@@ -59,39 +61,41 @@ export default function FengShuiAppPro() {
 
       {/* Added pt-20 for header, pb-24 for bottom nav */}
       <main className="flex-1 w-full pt-14 pb-24">
-        {activeTab === 'flying_star' && (
-          <div className="p-4 animation-fade-in flex flex-col gap-4">
-            <FlyingStarGrid
-              year={year}
-              setYear={setYear}
-              grid={grid}
-              afflictions={afflictions}
-              selectedCell={selectedCell}
-              setSelectedCell={setSelectedCell}
-              roomAssignments={roomAssignments}
-              handleRoomChange={handleRoomChange}
+        <Suspense fallback={<div className="p-10 text-center text-stone-500 animate-pulse">Loading...</div>}>
+          {activeTab === 'flying_star' && (
+            <div className="p-4 animation-fade-in flex flex-col gap-4">
+              <FlyingStarGrid
+                year={year}
+                setYear={setYear}
+                grid={grid}
+                afflictions={afflictions}
+                selectedCell={selectedCell}
+                setSelectedCell={setSelectedCell}
+                roomAssignments={roomAssignments}
+                handleRoomChange={handleRoomChange}
+              />
+            </div>
+          )}
+
+          {/* CALENDAR TAB */}
+          {activeTab === 'calendar' && (
+            <CalendarDetailView
+              date={calendarDate}
+              setDate={setCalendarDate}
             />
-          </div>
-        )}
+          )}
 
-        {/* CALENDAR TAB */}
-        {activeTab === 'calendar' && (
-          <CalendarDetailView
-            date={calendarDate}
-            setDate={setCalendarDate}
-          />
-        )}
-
-        {/* Fortune Mode: Fixed to 2026 as requested */}
-        {activeTab === 'fortune' && (
-          <ZodiacList
-            year={2026}
-            expandedZodiac={expandedZodiac}
-            setExpandedZodiac={setExpandedZodiac}
-            selectedMonthIndex={selectedMonthIndex}
-            setSelectedMonthIndex={setSelectedMonthIndex}
-          />
-        )}
+          {/* Fortune Mode: Fixed to 2026 as requested */}
+          {activeTab === 'fortune' && (
+            <ZodiacList
+              year={2026}
+              expandedZodiac={expandedZodiac}
+              setExpandedZodiac={setExpandedZodiac}
+              selectedMonthIndex={selectedMonthIndex}
+              setSelectedMonthIndex={setSelectedMonthIndex}
+            />
+          )}
+        </Suspense>
       </main>
 
       <BottomNav
